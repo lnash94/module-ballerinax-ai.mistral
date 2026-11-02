@@ -6,6 +6,7 @@ Mistral AI provides high-performance, open-weights large language models (LLMs) 
 
 - Seamless integration with high-performance Mistral LLMs
 - Support for chat completions and text generation
+- Support for reasoning models with configurable reasoning effort
 - Efficient handling of model parameters and prompts
 - Simplified access to Mistral AI's API endpoints
 - Secure communication with API key authentication
@@ -38,7 +39,16 @@ Here's how to initialize the Model Provider:
 import ballerina/ai;
 import ballerinax/ai.mistral;
 
-final ai:ModelProvider mistralModel = check new mistral:ModelProvider("mistralApiKey", mistral:MINISTRAL_3B_2410);
+final ai:ModelProvider mistralModel = check new mistral:ModelProvider("mistralApiKey", mistral:MINISTRAL_8B_2512);
+```
+
+The model type can be one of the predefined `mistral:MISTRAL_AI_MODEL_NAMES` values or any other Mistral AI model name provided as a `string`.
+
+For reasoning-capable models such as `mistral:MISTRAL_LARGE_4_0` and `mistral:MISTRAL_SMALL_2603`, the reasoning effort can be configured using the `reasoningEffort` parameter. The supported values vary by model. The reasoning (thinking) content returned by these models is not included in the response content.
+
+```ballerina
+final ai:ModelProvider mistralReasoningModel = check new mistral:ModelProvider("mistralApiKey",
+    mistral:MISTRAL_LARGE_4_0, reasoningEffort = "high");
 ```
 
 ### Step 4: Invoke chat completion

@@ -78,42 +78,141 @@ public type ConnectionConfig record {|
     boolean validation = true;
 |};
 
-# Models types for Mistral AI
+# Model types for Mistral AI.
+# The model type of the `ModelProvider` also accepts any other Mistral AI model name as a `string`,
+# which allows using models that are not listed here.
 @display {label: "Mistral AI Model Names"}
 public enum MISTRAL_AI_MODEL_NAMES {
     MISTRAL_SMALL_LATEST = "mistral-small-latest",
     MISTRAL_MEDIUM_LATEST = "mistral-medium-latest",
     MISTRAL_LARGE_LATEST = "mistral-large-latest",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     DEVSTRAL_SMALL_LATEST = "devstral-small-latest",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     PIXTRAL_LARGE_LATEST = "pixtral-large-latest",
     MINISTRAL_3B_LATEST = "ministral-3b-latest",
     MINISTRAL_8B_LATEST = "ministral-8b-latest",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_SABA_LATEST = "mistral-saba-latest",
     CODESTRAL_LATEST = "codestral-latest",
+    # Mistral Large 4 (v26.10)
+    MISTRAL_LARGE_4 = "mistral-large-4",
+    # Mistral Large 4 (v26.10)
+    MISTRAL_LARGE_4_0 = "mistral-large-4-0",
+    # Mistral Small 4 (v26.03)
+    MISTRAL_SMALL_2603 = "mistral-small-2603",
+    # Ministral 3 3B (v25.12)
+    MINISTRAL_3B_2512 = "ministral-3b-2512",
+    # Ministral 3 8B (v25.12)
+    MINISTRAL_8B_2512 = "ministral-8b-2512",
+    # Ministral 3 14B (v25.12)
+    MINISTRAL_14B_2512 = "ministral-14b-2512",
+    # Codestral (v25.08)
+    CODESTRAL_2508 = "codestral-2508",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_SMALL_2402 = "mistral-small-2402",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_SMALL_2409 = "mistral-small-2409",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_SMALL_2501 = "mistral-small-2501",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_SMALL_2503 = "mistral-small-2503",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MINISTRAL_3B_2410 = "ministral-3b-2410",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MINISTRAL_8B_2410 = "ministral-8b-2410",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_MEDIUM_2312 = "mistral-medium-2312",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_MEDIUM_2505 = "mistral-medium-2505",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_LARGE_2402 = "mistral-large-2402",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_LARGE_2407 = "mistral-large-2407",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_LARGE_2411 = "mistral-large-2411",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     MISTRAL_SABA_2502 = "mistral-saba-2502",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     CODESTRAL_2405 = "codestral-2405",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     CODESTRAL_2501 = "codestral-2501",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     CODESTRAL_MAMBA_2407 = "codestral-mamba-2407",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     DEVSTRAL_SMALL_2505 = "devstral-small-2505",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     OPEN_MISTRAL_7B = "open-mistral-7b",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     OPEN_MISTRAL_NEMO = "open-mistral-nemo",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     OPEN_MIXTRAL_8X7B = "open-mixtral-8x7b",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     OPEN_MIXTRAL_8X22B = "open-mixtral-8x22b",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     PIXTRAL_LARGE_2411 = "pixtral-large-2411",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     PIXTRAL_12B_2409 = "pixtral-12b-2409",
+    # # Deprecated
+    # This model is deprecated or retired by Mistral AI. Use a current model instead.
+    @deprecated
     OPEN_CODESTRAL_MAMBA = "open-codestral-mamba"
 }
+
+# Reasoning effort for reasoning-capable Mistral AI models.
+# The supported values vary by model. Refer to the [Mistral AI reasoning documentation](https://docs.mistral.ai/capabilities/reasoning/).
+@display {label: "Reasoning Effort"}
+public type ReasoningEffort "none"|"minimal"|"low"|"medium"|"high"|"xhigh";
 
 # Mistral message record.
 type MistralMessages mistral:AssistantMessage|mistral:SystemMessage|mistral:UserMessage|mistral:ToolMessage;

@@ -228,8 +228,9 @@ isolated function getGetResultsTool(map<json> parameters) returns mistral:Tool[]
     ];
 }
 
-isolated function generateLlmResponse(mistral:Client llmClient, int maxTokens, MISTRAL_AI_MODEL_NAMES modelType,
-        decimal temperature, ai:Prompt prompt, typedesc<json> expectedResponseTypedesc) returns anydata|ai:Error {
+isolated function generateLlmResponse(mistral:Client llmClient, int maxTokens, string modelType,
+        decimal temperature, ReasoningEffort? reasoningEffort, ai:Prompt prompt,
+        typedesc<json> expectedResponseTypedesc) returns anydata|ai:Error {
     observe:GenerateContentSpan span = observe:createGenerateContentSpan(modelType);
     span.addProvider("mistral_ai");
 
@@ -258,6 +259,9 @@ isolated function generateLlmResponse(mistral:Client llmClient, int maxTokens, M
         maxTokens,
         toolChoice: getGetResultsToolChoice()
     };
+    if reasoningEffort is ReasoningEffort {
+        request.reasoningEffort = reasoningEffort;
+    }
     span.addInputMessages(request.messages.toJson());
     mistral:ChatCompletionResponse|error response = llmClient->/chat/completions.post(request);
     if response is error {
