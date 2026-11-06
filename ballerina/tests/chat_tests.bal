@@ -35,10 +35,30 @@ function testNewModelNames() returns error? {
 }
 
 @test:Config
-function testModelNameAsString() returns error? {
-    ModelProvider provider = check new (API_KEY, "mistral-medium-3-5", CHAT_SERVICE_URL);
+function testReasoningEffortOnNonReasoningModel() {
+    ModelProvider|ai:Error provider = new (API_KEY, MINISTRAL_8B_2512, CHAT_SERVICE_URL, reasoningEffort = "high");
+    if provider !is ai:Error {
+        test:assertFail("Expected an ai:Error");
+    }
+    test:assertEquals(provider.message(),
+            "The model 'ministral-8b-2512' does not support the 'reasoningEffort' configuration.");
+}
+
+@test:Config
+function testUnsupportedReasoningEffortForModel() {
+    ModelProvider|ai:Error provider = new (API_KEY, MISTRAL_SMALL_2603, CHAT_SERVICE_URL, reasoningEffort = "low");
+    if provider !is ai:Error {
+        test:assertFail("Expected an ai:Error");
+    }
+    test:assertEquals(provider.message(),
+            "The model 'mistral-small-2603' does not support the reasoning effort 'low'. Supported values: none, high.");
+}
+
+@test:Config
+function testReasoningEffortOnLatestAlias() returns error? {
+    ModelProvider provider = check new (API_KEY, MISTRAL_SMALL_LATEST, CHAT_SERVICE_URL, reasoningEffort = "high");
     map<json> request = check getEchoedRequest(provider);
-    test:assertEquals(request["model"], "mistral-medium-3-5");
+    test:assertEquals(request["reasoning_effort"], "high");
 }
 
 @test:Config

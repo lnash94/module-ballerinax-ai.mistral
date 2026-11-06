@@ -32,7 +32,7 @@ const DEFAULT_TEMPERATURE = 0.7d;
 public isolated client class ModelProvider {
     *ai:ModelProvider;
     private final mistral:Client llmClient;
-    private final string modelType;
+    private final MISTRAL_AI_MODEL_NAMES modelType;
     private final decimal temperature;
     private final int maxTokens;
     private final ReasoningEffort? reasoningEffort;
@@ -48,13 +48,14 @@ public isolated client class ModelProvider {
     # + connectionConfig - Additional HTTP connection configuration
     # + return - `nil` on successful initialization; otherwise, returns an `ai:Error`
     public isolated function init(@display {label: "API Key"} string apiKey,
-            @display {label: "Model Type"} MISTRAL_AI_MODEL_NAMES|string modelType,
+            @display {label: "Model Type"} MISTRAL_AI_MODEL_NAMES modelType,
             @display {label: "Service URL"} string serviceUrl = DEFAULT_MISTRAL_AI_SERVICE_URL,
             @display {label: "Maximum Tokens"} int maxTokens = DEFAULT_MAX_TOKEN_COUNT,
             @display {label: "Temperature"} decimal temperature = DEFAULT_TEMPERATURE,
             @display {label: "Reasoning Effort"} ReasoningEffort? reasoningEffort = (),
             @display {label: "Connection Configuration"} *ConnectionConfig connectionConfig
     ) returns ai:Error? {
+        check validateReasoningEffort(modelType, reasoningEffort);
 
         mistral:ConnectionConfig mistralConfig = {
             auth: {token: apiKey},
@@ -318,6 +319,41 @@ isolated function getTextContent(mistral:ContentChunk[] content) returns string?
         }
     }
     return textParts.length() > 0 ? string:'join("", ...textParts) : ();
+}
+
+# Reasoning-effort values accepted by each reasoning-capable model, as documented in the
+# [Mistral AI reasoning documentation](https://docs.mistral.ai/capabilities/reasoning/).
+#
+# The accepted set differs per model, and the API-wide `reasoning_effort` enum includes values that
+# not every model accepts. A predefined model absent from this map does not support reasoning effort.
+final readonly & map<ReasoningEffort[]> SUPPORTED_REASONING_EFFORTS = {
+    "mistral-large-4": ["low", "medium", "high"],
+    "mistral-large-4-0": ["low", "medium", "high"],
+    "mistral-small-2603": ["none", "high"]
+};
+
+# Validates a reasoning effort against the selected model, so that an unsupported
+# combination fails at initialization instead of being rejected by Mistral AI at the first call.
+#
+# The `-latest` aliases are not validated, since the model behind an alias changes over time.
+#
+# + modelType - The model name
+# + effort - The reasoning effort to validate, if any
+# + return - An `ai:Error` if the effort is not valid for the model; otherwise `()`
+isolated function validateReasoningEffort(MISTRAL_AI_MODEL_NAMES modelType, ReasoningEffort? effort)
+        returns ai:Error? {
+    if effort !is ReasoningEffort || modelType.endsWith("-latest") {
+        return;
+    }
+    ReasoningEffort[]? supportedEfforts = SUPPORTED_REASONING_EFFORTS[modelType];
+    if supportedEfforts is () {
+        return error ai:Error(string `The model '${modelType}' does not support the 'reasoningEffort' configuration.`);
+    }
+    if supportedEfforts.indexOf(effort) is () {
+        return error ai:Error(string `The model '${modelType}' does not support the reasoning effort '${
+                effort}'. Supported values: ${string:'join(", ", ...supportedEfforts)}.`);
+    }
+    return;
 }
 
 isolated function getChatMessageStringContent(ai:Prompt|string prompt) returns string|ai:Error {

@@ -42,9 +42,7 @@ import ballerinax/ai.mistral;
 final ai:ModelProvider mistralModel = check new mistral:ModelProvider("mistralApiKey", mistral:MINISTRAL_8B_2512);
 ```
 
-The model type can be one of the predefined `mistral:MISTRAL_AI_MODEL_NAMES` values or any other Mistral AI model name provided as a `string`.
-
-For reasoning-capable models such as `mistral:MISTRAL_LARGE_4_0` and `mistral:MISTRAL_SMALL_2603`, the reasoning effort can be configured using the `reasoningEffort` parameter. The supported values vary by model. The reasoning (thinking) content returned by these models is not included in the response content.
+For reasoning-capable models such as `mistral:MISTRAL_LARGE_4_0` and `mistral:MISTRAL_SMALL_2603`, the reasoning effort can be configured using the `reasoningEffort` parameter. The supported values vary by model: `mistral:MISTRAL_LARGE_4_0` accepts `low`, `medium` and `high`, and `mistral:MISTRAL_SMALL_2603` accepts `none` and `high`. Setting a reasoning effort that the model does not support returns an error when the model provider is initialized. The reasoning (thinking) content returned by these models is not included in the response content.
 
 ```ballerina
 final ai:ModelProvider mistralReasoningModel = check new mistral:ModelProvider("mistralApiKey",
